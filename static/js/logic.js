@@ -1,15 +1,27 @@
 // Create the 'basemap' tile layer that will be the background of our map.
+let streetmap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+});
 
+let baseMaps = {
+  "Street Map": streetmap
+};
 
 // OPTIONAL: Step 2
 // Create the 'street' tile layer as a second background of the map
 
 
 // Create the map object with center and zoom options.
-
+let map = L.map("map-id", {
+  center: [40.73, -74.0059],
+  zoom: 12,
+  layers: [streetmap, bikeStations]
+});
 
 // Then add the 'basemap' tile layer to the map.
-
+L.control.layers(baseMaps {
+  collapsed: false
+}).addTo(map);
 // OPTIONAL: Step 2
 // Create the layer groups, base maps, and overlays for our two sets of data, earthquakes and tectonic_plates.
 // Add a control to the map that will allow the user to change which layers are visible.
@@ -27,6 +39,12 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
 
   // This function determines the color of the marker based on the depth of the earthquake.
   function getColor(depth) {
+    if (depth > 90) return "red";
+    else if (depth > 70) retrun "orangered";
+    else if (depth > 50) retrun "orange";
+    else if (depth > 30) return "gold";
+    else if (depth > 10) return "yellowgreen";
+    else return "green";
 
   }
 
@@ -39,13 +57,16 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
   L.geoJson(data, {
     // Turn each feature into a circleMarker on the map.
     pointToLayer: function (feature, latlng) {
-
+      return L.circleMarker(latlng);
     },
     // Set the style for each circleMarker using our styleInfo function.
     style: styleInfo,
     // Create a popup for each marker to display the magnitude and location of the earthquake after the marker has been created and styled
     onEachFeature: function (feature, layer) {
-
+      layer.bindPopup(
+        `<strong>Magnitude:</strong> ${feature.properties.mag}<br>
+         <strong>Location:</strong> ${feature.properties.place}`
+      );
     }
   // OPTIONAL: Step 2
   // Add the data to the earthquake layer instead of directly to the map.

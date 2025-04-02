@@ -12,16 +12,17 @@ let baseMaps = {
 
 
 // Create the map object with center and zoom options.
-let map = L.map("map-id", {
-  center: [40.73, -74.0059],
+let map = L.map("map", {
+  center: [40.73, -74.0059], ///change center coordinates!
   zoom: 12,
   layers: [streetmap]
 });
 
 // Then add the 'basemap' tile layer to the map.
-L.control.layers(baseMaps {
+L.control.layers(baseMaps, {
   collapsed: false
 }).addTo(map);
+
 // OPTIONAL: Step 2
 // Create the layer groups, base maps, and overlays for our two sets of data, earthquakes and tectonic_plates.
 // Add a control to the map that will allow the user to change which layers are visible.
@@ -34,6 +35,15 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
   // the map. Pass the magnitude and depth of the earthquake into two separate functions
   // to calculate the color and radius.
   function styleInfo(feature) {
+    return {
+      opacity: 1,
+      fillOpacity: 0.5,
+      fillColor: getColor(feature.geometry.coordinates[2]), // Depth is the third coordinate
+      color: "#000000", // Border color is black
+      radius: getRadius(feature.properties.mag), // Magnitude is in properties
+      stroke: true,
+      weight: 1
+    };
 
   }
 
@@ -50,8 +60,8 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
 
   // This function determines the radius of the earthquake marker based on its magnitude.
   function getRadius(magnitude) {
-    if (magnitude == 0) return 1;
-    else return magnitude * 10;
+    if (magnitude == 0) return 1; // size 1 so that it shows up on the map
+    else return magnitude * 10; // * 10 increases size for better visibility
   }
 
   // Add a GeoJSON layer to the map once the file is loaded.
@@ -60,6 +70,7 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
     pointToLayer: function (feature, latlng) {
       return L.circleMarker(latlng);
     },
+
     // Set the style for each circleMarker using our styleInfo function.
     style: styleInfo,
     // Create a popup for each marker to display the magnitude and location of the earthquake after the marker has been created and styled
@@ -81,18 +92,28 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
   // Then add all the details for the legend
   legend.onAdd = function () {
     let div = L.DomUtil.create("div", "info legend");
+    let labels = [-10, 10, 30, 50, 70, 90];
 
     // Initialize depth intervals and colors for the legend
-
+    for (let i = 0; i < labels.length; i++) {
 
     // Loop through our depth intervals to generate a label with a colored square for each interval.
-
-
+      let from = labels[i];    //set starting value
+      let to = labels[i + 1];  //set ending value
+    
+    div.innerHTML +=    //for writing HTML inside the legend
+    //creates the small colored box (12X 12 px square), using the starting color, and adds the text label using and if/else statement 
+    `<i style="background:${getColor(from)};   
+    width:12px; 
+    height:12px; 
+    display:inline-block; 
+    margin-right:5px;
+    "></i> ${from}${to ? '&ndash;' + to : '+'}<br>`;
     return div;
-  };
+    }
 
   // Finally, add the legend to the map.
-
+  };legend.addTo(map);
 
   // OPTIONAL: Step 2
   // Make a request to get our Tectonic Plate geoJSON data.
@@ -102,5 +123,5 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
 
     // Then add the tectonic_plates layer to the map.
 
-  });
+  
 });

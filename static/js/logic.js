@@ -7,10 +7,6 @@ let baseMaps = {
   "Street Map": streetmap
 };
 
-// OPTIONAL: Step 2
-// Create the 'street' tile layer as a second background of the map
-
-
 // Create the map object with center and zoom options.
 let map = L.map("map", {
   center: [40.73, -74.0059], 
@@ -22,11 +18,6 @@ let map = L.map("map", {
 L.control.layers(baseMaps, null, {  //added null since I'm not passing any overlays
   collapsed: false
 }).addTo(map);
-
-// OPTIONAL: Step 2
-// Create the layer groups, base maps, and overlays for our two sets of data, earthquakes and tectonic_plates.
-// Add a control to the map that will allow the user to change which layers are visible.
-
 
 // Make a request that retrieves the earthquake geoJSON data.
 d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson").then(function (data) {
@@ -48,18 +39,16 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
   }
 
   // This function determines the color of the marker based on the depth of the earthquake.
-  // I went with these blue shades because the greens were hard to tell part
-function getColor(depth) {
-  if (depth > 90) return "red";    
-  else if (depth > 70) return "#1f78b4"; // blue
-  else if (depth > 50) return "coral"; // green
-  else if (depth > 30) return "#ff7f00"; // orange
-  else if (depth > 10) return "yellow"; // red
-  else if (depth > -10) return "lime"; // light pink
-  else return "darkgreen";                 // bright yellow 
-}
+  function getColor(depth) {
+    if (depth >= 90) return "#6a3d9a";     // deep purple 
+    else if (depth >= 70) return "#1f78b4"; // blue
+    else if (depth >= 50) return "#33a02c"; // green
+    else if (depth >= 30) return "#ff7f00"; // orange
+    else if (depth >= 10) return "#e31a1c"; // red
+    else if (depth >= -10) return "#fb9a99"; // light pink
+    else return "#ffff33";                 // bright yellow 
+  }
   
-
   // This function determines the radius of the earthquake marker based on its magnitude.
   function getRadius(magnitude) {
     if (magnitude == 0) return 1; // size 1 so that it shows up on the map
@@ -115,27 +104,4 @@ function getColor(depth) {
   // Finally, add the legend to the map.
   
   legend.addTo(map);
-
-  // OPTIONAL: Step 2
-  // Make a request to get our Tectonic Plate geoJSON data.
-  // d3.json("https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json").then(function (plate_data) {
-    // Save the geoJSON data, along with style information, to the tectonic_plates layer.
-
-
-    // Then add the tectonic_plates layer to the map.
-
-  
  });
-
-
-
-
-// function getColor(depth) {
-//   if (depth > 90) return "red";    
-//   else if (depth > 70) return "#1f78b4"; // blue
-//   else if (depth > 50) return "coral"; // green
-//   else if (depth > 30) return "#ff7f00"; // orange
-//   else if (depth > 10) return "yellow"; // red
-//   else if (depth > -10) return "lime"; // light pink
-//   else return "light green";                 // bright yellow 
-// }

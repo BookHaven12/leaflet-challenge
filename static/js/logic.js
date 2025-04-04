@@ -9,7 +9,7 @@ let baseMaps = {
 
 // Create the map object with center and zoom options.
 let map = L.map("map", {
-  center: [33.4484, -112.0740], 
+  center: [33.4484, -112.0740], //coordinates for Phoenix, AZ
   zoom: 2,
   layers: [streetmap]
 });
@@ -66,9 +66,14 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
     style: styleInfo,
     // Create a popup for each marker to display the magnitude and location of the earthquake after the marker has been created and styled
     onEachFeature: function (feature, layer) {
+      let magnitude = feature.properties.mag;
+      let depth = feature.geometry.coordinates[2];
+      let location = feature.properties.place;
+    
       layer.bindPopup(
-        `<strong>Magnitude:</strong> ${feature.properties.mag}<br>
-         <strong>Location:</strong> ${feature.properties.place}`
+        `<strong>Magnitude:</strong> ${magnitude}<br>
+        <strong>Location:</strong> ${location}<br>
+        <strong>Depth:</strong> ${depth} km`
       );
     }
   }).addTo(map);

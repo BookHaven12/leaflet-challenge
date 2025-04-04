@@ -9,7 +9,7 @@ let baseMaps = {
 
 // Create the map object with center and zoom options.
 let map = L.map("map", {
-  center: [40.73, -74.0059], 
+  center: [33.4484, -112.0740], 
   zoom: 2,
   layers: [streetmap]
 });

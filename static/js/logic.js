@@ -71,8 +71,6 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
          <strong>Location:</strong> ${feature.properties.place}`
       );
     }
-  // OPTIONAL: Step 2
-  // Add the data to the earthquake layer instead of directly to the map.
   }).addTo(map);
 
   // Create a legend control object.
@@ -102,6 +100,5 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
     };
 
   // Finally, add the legend to the map.
-  
   legend.addTo(map);
  });
